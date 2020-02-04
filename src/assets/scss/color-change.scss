@@ -1,0 +1,22 @@
+.title {
+  animation: colorchange 2s infinite alternate;
+  -webkit-animation: colorchange 2s infinite alternate;
+}
+
+@keyframes colorchange {
+  0% {
+    color: #c06c84;
+  }
+  100% {
+    color: #6c5b7b;
+  }
+}
+
+@-webkit-keyframes colorchange /* Safari and Chrome - necessary duplicate */ {
+  0% {
+    color: #c06c84;
+  }
+  100% {
+    color: #6c5b7b;
+  }
+}
