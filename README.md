@@ -32,13 +32,13 @@ By running the application in a development environment, it expects the blockcha
 Run Jest tests with:
 
 ```
-npm run test:jest
+npm run test:unit
 ```
 
 Run Cypress tests with:
 
 ```
-npm run test:cypress
+npm run test:e2e
 ```
 
 ## Credits

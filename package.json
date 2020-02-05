@@ -14,8 +14,8 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test:jest": "react-scripts test",
-    "test:cypress": "cypress open",
+    "test:unit": "react-scripts test",
+    "test:e2e": "cypress open",
     "eject": "react-scripts eject"
   },
   "dependencies": {
