@@ -1,5 +1,5 @@
 export const truncateChannel = (channel: string, pad: number = 9) => {
-  const regex = /^[123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz]{34}$/;
+  const regex = /^[0-9A-Za-z]{34}$/;
 
   if (channel.match(regex) || channel.length >= 28) {
     const start = channel.substr(0, pad);
