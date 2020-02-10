@@ -1,6 +1,8 @@
 import config from '../config';
 import constants from '../constants';
 import axios from 'axios';
+import BigNumber from 'bignumber.js';
+
 import { IMessageTransaction, ITransactionData, IPostTransactionResponse } from '../interfaces';
 
 const path = (endpoint: string): string => config.nodes[0] + '/api' + endpoint;
@@ -68,23 +70,23 @@ export const fetchTotalUsers = async (): Promise<number> => {
 };
 
 export const fetchRemoteNonce = async (address: string): Promise<string> => {
-  let nonce;
+  let nonce: BigNumber;
 
   try {
     const res = await axios.get(path(`/v2/wallets/${address}`));
 
-    nonce = parseInt(res.data.data.nonce);
+    nonce = new BigNumber(res.data.data.nonce);
   } catch {
-    nonce = 0;
+    nonce = new BigNumber(0);
   }
 
-  return String(nonce + 1);
+  return nonce.plus(1).toString();
 };
 
-export const fetchBalance = async (address: string): Promise<number> => {
+export const fetchBalance = async (address: string): Promise<BigNumber> => {
   const res = await axios.get(path(`/wallets/${address}`));
 
-  return parseInt(res.data.data.balance);
+  return new BigNumber(res.data.data.balance);
 };
 
 export const fetchRegistrationDate = async (
