@@ -74,10 +74,9 @@ export const fetchRemoteNonce = async (address: string): Promise<string> => {
   let nonce;
 
   try {
-    nonce = await axios
-      .get(path(`/v2/wallets/${address}`))
-      .then(res => parseInt(res.data.data.nonce))
-      .catch(() => 0);
+    const res = await axios.get(path(`/v2/wallets/${address}`));
+
+    nonce = parseInt(res.data.data.nonce);
   } catch {
     nonce = 0;
   }
