@@ -36,9 +36,9 @@ export default function MessageInput({ message, handleSubmit, setMessage }: IPro
         setModalIsOpen={setModalIsOpen}
       />
       <small className="text-muted alt-font pointer" onClick={() => setModalIsOpen(!modalIsOpen)}>
-        <FontAwesomeIcon icon="search" /> Preview
+        <FontAwesomeIcon icon="search" /> Markdown preview
       </small>
-      <div className="input-group">
+      <div className="input-group mt-1">
         <textarea
           className="form-control"
           rows={1}
