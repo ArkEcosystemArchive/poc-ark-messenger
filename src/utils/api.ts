@@ -8,12 +8,13 @@ import { IMessageTransaction, ITransactionData, IPostTransactionResponse } from 
 const path = (endpoint: string): string => config.nodes[0] + '/api' + endpoint;
 
 export const checkAccountExists = async (id: string): Promise<boolean> => {
-  const hits = await axios
-    .get(path('/delegates/' + id))
-    .then(res => Object.keys(res.data.data).length)
-    .catch(err => 0);
+  try {
+    const res = await axios.get(path('/delegates/' + id));
 
-  return hits > 0;
+    return Object.keys(res.data.data).length > 0;
+  } catch {
+    return false;
+  }
 };
 
 export const getTransactions = async (channel: string): Promise<IMessageTransaction[]> => {
@@ -36,13 +37,15 @@ export const getLastMessage = async (channel: string): Promise<IMessageTransacti
   return res.data.data[0];
 };
 
-export const fetchUsername = (address: string): Promise<string | null> =>
-  axios
-    .get(path('/delegates/' + address))
-    .then(res => {
-      return res ? res.data.data.username : null;
-    })
-    .catch(() => null);
+export const fetchUsername = async (address: string): Promise<string | null> => {
+  try {
+    const res = await axios.get(path('/delegates/' + address));
+
+    return res.data.data.username;
+  } catch {
+    return null;
+  }
+};
 
 export const fetchTotalMessages = async (): Promise<number> => {
   const res = await axios.post(path('/transactions/search'), {
