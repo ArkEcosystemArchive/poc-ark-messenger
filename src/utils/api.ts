@@ -34,16 +34,13 @@ export const getLastMessage = async (channel: string): Promise<IMessageTransacti
   return res.data.data[0];
 };
 
-export const fetchUsername = async (address: string): Promise<string | null> => {
-  const username = await axios
+export const fetchUsername = (address: string): Promise<string | null> =>
+  axios
     .get(path('/delegates/' + address))
     .then(res => {
       return res ? res.data.data.username : null;
     })
     .catch(() => null);
-
-  return username;
-};
 
 export const fetchTotalMessages = async (): Promise<number> => {
   const res = await axios.post(path('/transactions/search'), {
