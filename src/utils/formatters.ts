@@ -13,7 +13,7 @@ export const truncateChannel = (channel: string, pad: number = 9) => {
 
 export const truncateMessage = (message: string) => {
   if (message.length > 32) {
-    return message.substr(0, 32) + '...';
+    return message.substr(0, 29) + '...';
   }
 
   return message;
