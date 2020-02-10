@@ -105,3 +105,9 @@ export interface IMessage {
   sender: string;
   timestamp: string;
 }
+
+export interface IChannel {
+  id: string;
+  passphrase: string;
+  alias: string | null;
+}
