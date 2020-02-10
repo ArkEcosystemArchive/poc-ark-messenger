@@ -35,7 +35,13 @@ export default function ChatBubble({ data }: IProps) {
         <hr className="my-1" />
 
         <div className="chat-message">
-          <Markdown>{message}</Markdown>
+          <Markdown
+            // Ignoring due to typings being outdated / not including this attribute
+            // @ts-ignore
+            options={{ disableParsingRawHTML: true }}
+          >
+            {message}
+          </Markdown>
         </div>
       </div>
     </div>

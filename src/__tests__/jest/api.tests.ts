@@ -1,3 +1,4 @@
+import BigNumber from 'bignumber.js';
 import {
   checkAccountExists,
   getTransactions,
@@ -79,13 +80,13 @@ describe('api', () => {
   });
 
   test('it should return the nonce of the entered username', async () => {
-    const nonce = await fetchRemoteNonce('genesis_1');
-    expect(nonce).toBe('4');
+    const nonce = await fetchRemoteNonce('APnhwwyTbMiykJwYbGhYjNgtHiVJDSEhSn');
+    expect(nonce).toBe('52');
   });
 
   test('it should return the balance of the entered address', async () => {
-    const amount = await fetchBalance('genesis_1');
-    expect(typeof amount).toBe('number');
+    const amount = await fetchBalance('APnhwwyTbMiykJwYbGhYjNgtHiVJDSEhSn');
+    expect(amount).toMatchObject(new BigNumber('-12500000000000000'));
   });
 
   test('it should return the registration date of the entered address as a timestamp', async () => {

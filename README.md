@@ -41,6 +41,10 @@ Run Cypress tests with:
 npm run test:cypress
 ```
 
+## Compatibility
+
+iOS / Safari are currently not supported due to the ARK crypto package using the `BigInt` type which is not yet supported on Apple products.
+
 ## Credits
 
 This project exists thanks to all the people who [contribute](../../contributors).
