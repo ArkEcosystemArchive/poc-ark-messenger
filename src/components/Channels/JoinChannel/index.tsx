@@ -1,9 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Redirect } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { getAddress, setChannelPassphrase } from '../../../utils';
+
+import { LoginContext } from '../../../contexts';
+import { getAddress, createUserChannel } from '../../../utils';
 
 export default function JoinChannel() {
+  const context = useContext(LoginContext);
+
   const [passphrase, setPassphrase] = useState<string>('');
   const [channelId, setChannelId] = useState<string>('');
 
@@ -12,7 +16,7 @@ export default function JoinChannel() {
 
     const id = getAddress(passphrase);
 
-    setChannelPassphrase(id, passphrase);
+    createUserChannel(context.user.address, id, passphrase);
     setChannelId(id);
   };
 

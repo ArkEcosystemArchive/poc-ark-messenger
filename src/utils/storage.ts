@@ -1,3 +1,5 @@
+import { IChannel } from '../interfaces';
+
 export const getUsername = (address: string): string | null => {
   return localStorage.getItem(address);
 };
@@ -14,36 +16,48 @@ export const setUserPassphrase = (passphrase: string): void => {
   localStorage.setItem('passphrase', passphrase);
 };
 
-export const getChannelPassphrase = (id: string): string | null => {
-  return localStorage.getItem('channelId-' + id);
+export const setUserChannels = (user: string, channels: IChannel[]): void => {
+  localStorage.setItem(user + '-channels', JSON.stringify(channels));
 };
 
-export const setChannelPassphrase = (id: string, passphrase: string): void => {
-  localStorage.setItem('channelId-' + id, passphrase);
+export const getUserChannel = (user: string, id: string): IChannel | undefined => {
+  const channels = getUserChannels(user);
+
+  return channels.find(channel => channel.id === id);
 };
 
-export const removeChannelPassphrase = (id: string): void => {
-  localStorage.removeItem('channelId-' + id);
+export const getUserChannels = (user: string): IChannel[] => {
+  const channels = localStorage.getItem(user + '-channels');
+
+  return channels ? JSON.parse(channels) : [];
 };
 
-export const getChannelAlias = (id: string): string | null => {
-  return localStorage.getItem('channelAlias-' + id);
+export const createUserChannel = (user: string, id: string, passphrase: string): void => {
+  const channels = getUserChannels(user);
+  const channel = { id, passphrase, alias: null };
+
+  channels.push(channel);
+
+  setUserChannels(user, channels);
 };
 
-export const setChannelAlias = (id: string, alias: string): void => {
-  localStorage.setItem('channelAlias-' + id, alias);
+export const removeUserChannel = (user: string, channelId: string): void => {
+  const channels = getUserChannels(user);
+
+  setUserChannels(
+    user,
+    channels.filter(channel => channel.id !== channelId)
+  );
 };
 
-export const getUniqueChannels = (): string[] => {
-  const channels = Object.keys(localStorage).filter(obj => obj.match(/channelId/));
+export const setChannelAlias = (user: string, channel: IChannel, alias: string): void => {
+  const channels = getUserChannels(user);
 
-  return channels.map(raw => raw.replace('channelId-', ''));
+  channels[channels.findIndex(ch => ch.id === channel.id)] = { ...channel, alias };
+
+  setUserChannels(user, channels);
 };
 
-export const removeAllChannels = (): void => {
-  const channels = getUniqueChannels();
-
-  for (const channel of channels) {
-    removeChannelPassphrase(channel);
-  }
+export const removeAllChannels = (user: string): void => {
+  localStorage.removeItem(user + '-channels');
 };
