@@ -7,7 +7,7 @@ describe('formatters', () => {
 
   test('it should truncate the message', () => {
     expect(truncateMessage('This is a relatively long message that should be truncated')).toBe(
-      'This is a relatively long messag...'
+      'This is a relatively long mes...'
     );
   });
 

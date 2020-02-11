@@ -1,4 +1,6 @@
 import axios from 'axios';
+import BigNumber from 'bignumber.js';
+
 import { IMessageTransaction, ITransactionData, IPostTransactionResponse } from '../interfaces';
 
 const path = (endpoint: string): string => process.env.REACT_APP_NODE + '/api' + endpoint;
@@ -9,12 +11,13 @@ const messageTypes = {
 };
 
 export const checkAccountExists = async (id: string): Promise<boolean> => {
-  const hits = await axios
-    .get(path('/delegates/' + id))
-    .then(res => Object.keys(res.data.data).length)
-    .catch(err => 0);
+  try {
+    const res = await axios.get(path('/delegates/' + id));
 
-  return hits > 0;
+    return Object.keys(res.data.data).length > 0;
+  } catch {
+    return false;
+  }
 };
 
 export const getTransactions = async (channel: string): Promise<IMessageTransaction[]> => {
@@ -36,14 +39,13 @@ export const getLastMessage = async (channel: string): Promise<IMessageTransacti
 };
 
 export const fetchUsername = async (address: string): Promise<string | null> => {
-  const username = await axios
-    .get(path('/delegates/' + address))
-    .then(res => {
-      return res ? res.data.data.username : null;
-    })
-    .catch(() => null);
+  try {
+    const res = await axios.get(path('/delegates/' + address));
 
-  return username;
+    return res.data.data.username;
+  } catch {
+    return null;
+  }
 };
 
 export const fetchTotalMessages = async (): Promise<number> => {
@@ -68,24 +70,23 @@ export const fetchTotalUsers = async (): Promise<number> => {
 };
 
 export const fetchRemoteNonce = async (address: string): Promise<string> => {
-  let nonce;
+  let nonce: BigNumber;
 
   try {
-    nonce = await axios
-      .get(path(`/v2/wallets/${address}`))
-      .then(res => parseInt(res.data.data.nonce))
-      .catch(() => 0);
+    const res = await axios.get(path(`/v2/wallets/${address}`));
+
+    nonce = new BigNumber(res.data.data.nonce);
   } catch {
-    nonce = 0;
+    nonce = new BigNumber(0);
   }
 
-  return String(nonce + 1);
+  return nonce.plus(1).toString();
 };
 
-export const fetchBalance = async (address: string): Promise<number> => {
+export const fetchBalance = async (address: string): Promise<BigNumber> => {
   const res = await axios.get(path(`/wallets/${address}`));
 
-  return parseInt(res.data.data.balance);
+  return new BigNumber(res.data.data.balance);
 };
 
 export const fetchRegistrationDate = async (
