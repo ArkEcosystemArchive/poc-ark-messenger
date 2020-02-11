@@ -3,7 +3,6 @@ import PulseLoader from 'react-spinners/PulseLoader';
 import HomeButton from './HomeButton';
 import LogOutButton from './LogOutButton';
 
-import constants from '../../../constants';
 import { LoginContext } from '../../../contexts';
 import { getUserInfo } from '../../../utils';
 import { IUserInfo } from '../../../interfaces';
@@ -79,7 +78,9 @@ export default function UserInfo() {
                     {isLoading ? (
                       <PulseLoader sizeUnit={'em'} size={0.25} color={'#6c5b7b'} />
                     ) : (
-                      (userInfo.balance / 100000000).toLocaleString() + ' ' + constants.ticker
+                      (userInfo.balance / 100000000).toLocaleString() +
+                      ' ' +
+                      process.env.REACT_APP_TICKER
                     )}
                   </div>
                 </div>
