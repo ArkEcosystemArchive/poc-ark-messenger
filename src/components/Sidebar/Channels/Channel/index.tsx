@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import PulseLoader from 'react-spinners/PulseLoader';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -8,37 +8,37 @@ import {
   getLastMessage,
   decryptMessage,
   retrieveUsername,
-  getChannelPassphrase,
   truncateChannel,
   truncateMessage,
-  setChannelAlias,
-  getChannelAlias
+  setChannelAlias
 } from '../../../../utils';
 
-import { IMessage } from '../../../../interfaces';
+import { LoginContext } from '../../../../contexts';
+import { IMessage, IChannel } from '../../../../interfaces';
 
 type IProps = {
-  id: string;
+  channel: IChannel;
   handleDeleteChannel: (id: string) => void;
 };
 
-export default function Channel({ id, handleDeleteChannel }: IProps) {
-  const [channelName, setChannelName] = useState<string>(getChannelAlias(id) || id);
+export default function Channel({ channel, handleDeleteChannel }: IProps) {
+  const context = useContext(LoginContext);
+
+  const [channelName, setChannelName] = useState<string>(channel.alias || channel.id);
   const [lastMessage, setLastMessage] = useState<IMessage | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [errored, setErrored] = useState<boolean>(false);
 
   useEffect(() => {
     const fetch = async () => {
-      const tx = await getLastMessage(id).catch(() => setErrored(true));
-      const channelPassphrase = getChannelPassphrase(id);
+      const tx = await getLastMessage(channel.id).catch(() => setErrored(true));
 
-      if (tx && channelPassphrase) {
-        const message = decryptMessage(tx.asset.messageData.message, channelPassphrase);
+      if (tx && channel) {
+        const message = decryptMessage(tx.asset.messageData.message, channel.passphrase);
 
         const sender = await retrieveUsername(tx.sender);
 
-        setLastMessage({ id, message, sender, timestamp: tx.timestamp.human });
+        setLastMessage({ id: channel.id, message, sender, timestamp: tx.timestamp.human });
         setIsLoading(false);
       } else {
         setIsLoading(false);
@@ -52,26 +52,26 @@ export default function Channel({ id, handleDeleteChannel }: IProps) {
     }, 10000);
 
     return () => clearInterval(interval);
-  }, [id]);
+  }, [channel]);
 
   const updateChannelAlias = (): void => {
     const alias = window.prompt('New channel alias?', channelName);
 
     if (alias) {
-      setChannelAlias(id, alias);
+      setChannelAlias(context.user.address, channel, alias);
       setChannelName(alias);
     }
   };
 
   return (
-    <Link to={'/chat/' + id} className="list-group-item list-group-item-action bg-light">
+    <Link to={'/chat/' + channel.id} className="list-group-item list-group-item-action bg-light">
       <div>
         <div className="d-flex">
-          <div className="alt-font text-muted" id={id}>
+          <div className="alt-font text-muted" id={channel.id}>
             {truncateChannel(channelName)}
           </div>
           <div className="ml-auto">
-            <CopyToClipboard data={getChannelPassphrase(id) || ''} showText={false} />
+            <CopyToClipboard data={channel.passphrase || ''} showText={false} />
 
             <FontAwesomeIcon
               onClick={() => updateChannelAlias()}
@@ -80,7 +80,7 @@ export default function Channel({ id, handleDeleteChannel }: IProps) {
             />
 
             <FontAwesomeIcon
-              onClick={() => handleDeleteChannel(id)}
+              onClick={() => handleDeleteChannel(channel.id)}
               icon="window-close"
               className="icon-button danger"
             />
