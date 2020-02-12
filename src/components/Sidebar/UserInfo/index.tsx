@@ -2,8 +2,8 @@ import React, { useState, useEffect, useContext } from 'react';
 import PulseLoader from 'react-spinners/PulseLoader';
 import HomeButton from './HomeButton';
 import LogOutButton from './LogOutButton';
+import BigNumber from 'bignumber.js';
 
-import constants from '../../../constants';
 import { LoginContext } from '../../../contexts';
 import { getUserInfo } from '../../../utils';
 import { IUserInfo } from '../../../interfaces';
@@ -15,7 +15,7 @@ export default function UserInfo() {
     username: 'N/A',
     registeredOn: 'N/A',
     totalMessages: 0,
-    balance: 0
+    balance: new BigNumber(0)
   });
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
@@ -79,7 +79,7 @@ export default function UserInfo() {
                     {isLoading ? (
                       <PulseLoader sizeUnit={'em'} size={0.25} color={'#6c5b7b'} />
                     ) : (
-                      (userInfo.balance / 100000000).toLocaleString() + ' ' + constants.ticker
+                      userInfo.balance.dividedBy(100000000) + ' ' + process.env.REACT_APP_TICKER
                     )}
                   </div>
                 </div>

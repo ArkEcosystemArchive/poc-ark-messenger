@@ -1,3 +1,5 @@
+import BigNumber from 'bignumber.js';
+
 export interface ITransaction {
   id: string;
   blockId: string;
@@ -88,7 +90,7 @@ export interface IUser extends IAccount {
 
 export interface IUserInfo {
   username: string;
-  balance: number;
+  balance: BigNumber;
   registeredOn: string;
   totalMessages: number;
 }
