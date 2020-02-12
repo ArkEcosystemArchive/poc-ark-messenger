@@ -1,5 +1,3 @@
-import config from '../config';
-import constants from '../constants';
 import {
   broadcastTransaction,
   checkAccountExists,
@@ -39,14 +37,14 @@ const fundAccount = async (
 ): Promise<IPostTransactionResponse> => {
   const nonce = nonceOverride
     ? String(nonceOverride)
-    : await fetchRemoteNonce(config.preloader.address);
+    : await fetchRemoteNonce(process.env.REACT_APP_ADDRESS!);
 
   const tx = Transactions.BuilderFactory.transfer()
     .amount('5000000000')
     .recipientId(address)
     .vendorField('Test account pre-load')
     .nonce(nonce)
-    .sign(config.preloader.passphrase);
+    .sign(process.env.REACT_APP_PASSPHRASE!);
 
   return broadcastTransaction(tx.getStruct());
 };
@@ -68,11 +66,12 @@ const registerDelegate = async (
 
 export const newAccount = async (username: string): Promise<IUser> => {
   const { passphrase, address, publicKey } = generateRandomAccount();
+  const blockTime = Number(process.env.REACT_APP_BLOCK_TIME!);
 
   await fundAccount(address);
 
   // Wait for at least one block (+1 sec) to have balance saved
-  await delay(constants.blocktime * 1000 + 1000);
+  await delay(blockTime * 1000 + 1000);
 
   return registerDelegate(username, passphrase).then(() => {
     return {

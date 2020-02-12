@@ -1,11 +1,14 @@
-import config from '../config';
-import constants from '../constants';
 import axios from 'axios';
 import BigNumber from 'bignumber.js';
 
 import { IMessageTransaction, ITransactionData, IPostTransactionResponse } from '../interfaces';
 
-const path = (endpoint: string): string => config.nodes[0] + '/api' + endpoint;
+const path = (endpoint: string): string => process.env.REACT_APP_NODE + '/api' + endpoint;
+
+const messageTypes = {
+  type: process.env.REACT_APP_MESSAGE_TRANSACTION_TYPE,
+  typeGroup: process.env.REACT_APP_MESSAGE_TRANSACTION_TYPE_GROUP
+};
 
 export const checkAccountExists = async (id: string): Promise<boolean> => {
   try {
@@ -19,8 +22,7 @@ export const checkAccountExists = async (id: string): Promise<boolean> => {
 
 export const getTransactions = async (channel: string): Promise<IMessageTransaction[]> => {
   const res = await axios.post(path('/transactions/search'), {
-    type: constants.messageTransaction.type,
-    typeGroup: constants.messageTransaction.typeGroup,
+    ...messageTypes,
     recipientId: channel
   });
 
@@ -29,8 +31,7 @@ export const getTransactions = async (channel: string): Promise<IMessageTransact
 
 export const getLastMessage = async (channel: string): Promise<IMessageTransaction> => {
   const res = await axios.post(path('/transactions/search'), {
-    type: constants.messageTransaction.type,
-    typeGroup: constants.messageTransaction.typeGroup,
+    ...messageTypes,
     recipientId: channel
   });
 
@@ -48,18 +49,14 @@ export const fetchUsername = async (address: string): Promise<string | null> => 
 };
 
 export const fetchTotalMessages = async (): Promise<number> => {
-  const res = await axios.post(path('/transactions/search'), {
-    type: constants.messageTransaction.type,
-    typeGroup: constants.messageTransaction.typeGroup
-  });
+  const res = await axios.post(path('/transactions/search'), messageTypes);
 
   return res.data.meta.totalCount;
 };
 
 export const fetchTotalUserMessages = async (address: string): Promise<number> => {
   const res = await axios.post(path('/transactions/search'), {
-    type: constants.messageTransaction.type,
-    typeGroup: constants.messageTransaction.typeGroup,
+    ...messageTypes,
     senderId: address
   });
 
@@ -68,8 +65,8 @@ export const fetchTotalUserMessages = async (address: string): Promise<number> =
 
 export const fetchTotalUsers = async (): Promise<number> => {
   const res = await axios.get(path('/delegates'));
-
-  return res.data.meta.totalCount - constants.numOfDelegates;
+  const numOfDelegates = Number(process.env.REACT_APP_DELEGATES);
+  return res.data.meta.totalCount - numOfDelegates;
 };
 
 export const fetchRemoteNonce = async (address: string): Promise<string> => {

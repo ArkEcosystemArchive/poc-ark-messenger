@@ -4,7 +4,6 @@ import HomeButton from './HomeButton';
 import LogOutButton from './LogOutButton';
 import BigNumber from 'bignumber.js';
 
-import constants from '../../../constants';
 import { LoginContext } from '../../../contexts';
 import { getUserInfo } from '../../../utils';
 import { IUserInfo } from '../../../interfaces';
@@ -80,7 +79,7 @@ export default function UserInfo() {
                     {isLoading ? (
                       <PulseLoader sizeUnit={'em'} size={0.25} color={'#6c5b7b'} />
                     ) : (
-                      userInfo.balance.dividedBy(100000000) + ' ' + constants.ticker
+                      userInfo.balance.dividedBy(100000000) + ' ' + process.env.REACT_APP_TICKER
                     )}
                   </div>
                 </div>
