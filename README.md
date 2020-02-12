@@ -19,13 +19,20 @@ Install all dependencies:
 npm install
 ```
 
+Create a `.env.development` file and add your custom node and account pre-loader configuration:
+
+```
+REACT_APP_USERNAME=preloader
+REACT_APP_ADDRESS=AYeceuGa7tTsyG6jgq7X6qKdoXt9iJJKN6
+REACT_APP_PASSPHRASE=word word word word word word word word word word word word
+REACT_APP_NODE=http://127.0.0.1:11003
+```
+
 Run the application:
 
 ```
 npm start
 ```
-
-By running the application in a development environment, it expects the blockchain to run locally on port `4003`. You can change this behavior by editing the `nodes` value in `./src/config.ts`
 
 ## Tests
 
@@ -40,6 +47,10 @@ Run Cypress tests with:
 ```
 npm run test:e2e
 ```
+
+## Compatibility
+
+iOS / Safari are currently not supported due to the ARK crypto package using the `BigInt` type which is not yet supported on Apple products.
 
 ## Credits
 

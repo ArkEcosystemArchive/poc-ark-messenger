@@ -3,14 +3,24 @@ import {
   getUsername,
   setUserPassphrase,
   getUserPassphrase,
-  setChannelPassphrase,
-  getChannelPassphrase,
-  removeChannelPassphrase,
+  setUserChannels,
+  getUserChannel,
+  getUserChannels,
+  createUserChannel,
+  removeUserChannel,
   setChannelAlias,
-  getChannelAlias,
-  getUniqueChannels,
   removeAllChannels
 } from '../../utils';
+
+import { IChannel } from '../../interfaces';
+
+const parseStorageData = (data: string | null): IChannel[] => {
+  if (!data) {
+    return [];
+  }
+
+  return JSON.parse(data);
+};
 
 describe('storage', () => {
   test('it should set the username for the entered address', () => {
@@ -33,53 +43,75 @@ describe('storage', () => {
     expect(getUserPassphrase()).toBe('passphrase2');
   });
 
-  test('it should set the channel and its passphrase', () => {
-    setChannelPassphrase('channel1', 'passphrase3');
-    expect(localStorage.getItem('channelId-channel1')).toBe('passphrase3');
+  test("it should set the user's channels", () => {
+    const user = 'user1';
+    const channels = [{ id: 'id1', passphrase: 'passphrase1', alias: null }];
+    setUserChannels(user, channels);
+    expect(parseStorageData(localStorage.getItem(user + '-channels'))).toMatchObject(channels);
   });
 
-  test("it should get the channel's passphrase", () => {
-    localStorage.setItem('channelId-channel2', 'passphrase4');
-    expect(getChannelPassphrase('channel2')).toBe('passphrase4');
+  test('it should get the channel object for user and id', () => {
+    const user = 'user2';
+    const channel = { id: 'id2', passphrase: 'passphrase2', alias: null };
+    setUserChannels(user, [channel]);
+    expect(getUserChannel(user, channel.id)).toMatchObject(channel);
   });
 
-  test('it should remove the channel and its passphrase', () => {
-    localStorage.setItem('channelId-channel3', 'passphrase5');
-    expect(localStorage.getItem('channelId-channel3')).toBe('passphrase5');
-
-    removeChannelPassphrase('channel3');
-    expect(localStorage.getItem('channelId-channel3')).toBe(null);
+  test('it should get all channels for user', () => {
+    const user = 'user3';
+    const channels = [
+      { id: 'id3', passphrase: 'passphrase3', alias: null },
+      { id: 'id4', passphrase: 'passphrase4', alias: null }
+    ];
+    setUserChannels(user, channels);
+    expect(getUserChannels(user)).toMatchObject(channels);
   });
 
-  test('it should set the channel alias', () => {
-    setChannelAlias('originalChannel1', 'channelAlias1');
-    expect(localStorage.getItem('channelAlias-originalChannel1')).toBe('channelAlias1');
+  test('it should create a user channel', () => {
+    const user = 'user4';
+    const channel = { id: 'id5', passphrase: 'passphrase5', alias: null };
+    createUserChannel(user, channel.id, channel.passphrase);
+    expect(
+      parseStorageData(localStorage.getItem(user + '-channels')).find(ch => ch.id === channel.id)
+    ).toMatchObject(channel);
   });
 
-  test('it should get the channel alias', () => {
-    localStorage.setItem('channelAlias-originalChannel2', 'channelAlias2');
-    expect(getChannelAlias('originalChannel2')).toBe('channelAlias2');
+  test('it should remove a channel for user', () => {
+    const user = 'user5';
+    const channels = [
+      { id: 'id6', passphrase: 'passphrase6', alias: null },
+      { id: 'id7', passphrase: 'passphrase7', alias: null }
+    ];
+    setUserChannels(user, channels);
+    removeUserChannel(user, channels[1].id);
+    expect(
+      parseStorageData(localStorage.getItem(user + '-channels')).find(
+        ch => ch.id === channels[1].id
+      )
+    ).toBeFalsy();
   });
 
-  test('it should list all unique channel IDs', () => {
-    localStorage.setItem('channelId-channel1', 'passphrase1');
-    localStorage.setItem('channelId-channel2', 'passphrase2');
-    localStorage.setItem('channelId-channel3', 'passphrase3');
-    localStorage.setItem('channelId-channel4', 'passphrase4');
-
-    const channels = getUniqueChannels();
-
-    expect(channels.length).toBeGreaterThan(1);
+  test("it set the alias for a user's channel", () => {
+    const user = 'user7';
+    const channel = { id: 'id8', passphrase: 'passphrase8', alias: null };
+    const alias = 'testalias';
+    setUserChannels(user, [channel]);
+    setChannelAlias(user, channel, alias);
+    const storedChannel = parseStorageData(localStorage.getItem(user + '-channels')).find(
+      ch => ch.id === channel.id
+    );
+    expect(storedChannel.alias).toBe(alias);
   });
 
-  test('it should remove all channel passphrases', () => {
-    localStorage.setItem('channelId-channel5', 'passphrase5');
-    localStorage.setItem('channelId-channel6', 'passphrase6');
-    localStorage.setItem('channelId-channel7', 'passphrase7');
-    localStorage.setItem('channelId-channel8', 'passphrase8');
-
-    removeAllChannels();
-
-    expect(Object.keys(localStorage).filter(obj => obj.match(/channelId/)).length).toBe(0);
+  test('it should remove all channel for user', () => {
+    const user = 'user8';
+    const channels = [
+      { id: 'id9', passphrase: 'passphrase9', alias: null },
+      { id: 'id10', passphrase: 'passphrase10', alias: null },
+      { id: 'id11', passphrase: 'passphrase11', alias: null }
+    ];
+    setUserChannels(user, channels);
+    removeAllChannels(user);
+    expect(localStorage.getItem(user + '-channels')).toBe(null);
   });
 });

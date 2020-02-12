@@ -7,12 +7,7 @@ import MessageInput from './MessageInput';
 
 import { LoginContext } from '../../contexts';
 
-import {
-  sendMessage,
-  getTransactions,
-  decryptMessage,
-  getChannelPassphrase
-} from '../../utils/index';
+import { sendMessage, getTransactions, decryptMessage, getUserChannel } from '../../utils/index';
 
 import { IMessage } from '../../interfaces';
 
@@ -35,19 +30,19 @@ export default function Chat({ match: { params } }: IProps) {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isAtBottom, setIsAtBottom] = useState<boolean>(false);
 
-  const channelPassphrase = getChannelPassphrase(id);
+  const channel = getUserChannel(context.user.address, id);
 
   useEffect(() => {
     const processMessages = async (): Promise<void> => {
-      if (channelPassphrase) {
+      if (channel) {
         const { address } = context.user;
 
-        const transactions = await getTransactions(id);
+        const transactions = await getTransactions(channel.id);
 
         const messages = transactions.reverse().map(tx => ({
           id: tx.id,
           sender: tx.sender === address ? 'You' : tx.sender,
-          message: decryptMessage(tx.asset.messageData.message, channelPassphrase),
+          message: decryptMessage(tx.asset.messageData.message, channel.passphrase),
           timestamp: tx.timestamp.human
         }));
 
@@ -55,7 +50,7 @@ export default function Chat({ match: { params } }: IProps) {
       }
     };
 
-    if (channelPassphrase) {
+    if (channel) {
       processMessages().then(() => {
         setIsLoading(false);
         bottomRef.current && bottomRef.current.scrollIntoView();
@@ -69,7 +64,7 @@ export default function Chat({ match: { params } }: IProps) {
         clearInterval(interval);
       };
     }
-  }, [id, channelPassphrase, context.user]);
+  }, [id, context.user]);
 
   useEffect(() => {
     if (bottomRef.current && isAtBottom) {
@@ -82,10 +77,10 @@ export default function Chat({ match: { params } }: IProps) {
 
     const trimmedMessage = message.trim();
 
-    if (channelPassphrase && trimmedMessage) {
+    if (channel && trimmedMessage) {
       const { passphrase, address } = context.user;
 
-      sendMessage(id, trimmedMessage, channelPassphrase, passphrase, address);
+      sendMessage(id, trimmedMessage, channel.passphrase, passphrase, address);
 
       setMessage('');
     }
@@ -105,7 +100,7 @@ export default function Chat({ match: { params } }: IProps) {
     <div className="row content-window p-2 p-md-3 p-lg-4 p-xl-5 shadow" onScroll={handleScroll}>
       <div className="mt-auto w-100">
         <div>
-          {channelPassphrase && !log.length && !isLoading && (
+          {channel && !log.length && !isLoading && (
             <div className="text-center text-muted text-2x">No messages</div>
           )}
 
@@ -115,7 +110,7 @@ export default function Chat({ match: { params } }: IProps) {
             </div>
           )}
 
-          {channelPassphrase ? (
+          {channel ? (
             log.map(data => <ChatBubble key={data.id} data={data} />)
           ) : (
             <Redirect to="/channels" />
