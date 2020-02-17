@@ -45,7 +45,7 @@ const fundAccount = async (
     .network(NETWORK)
     .amount('5000000000')
     .recipientId(address)
-    .vendorField('Account pre-load')
+    // .vendorField('Account pre-load')
     .nonce(nonce)
     .sign(process.env.REACT_APP_PASSPHRASE!);
 
