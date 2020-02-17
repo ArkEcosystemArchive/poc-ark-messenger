@@ -1,12 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Redirect } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import CopyToClipboard from '../../Generic/CopyToClipboard';
 
-import { generateRandomAccount, setChannelPassphrase } from '../../../utils';
+import { LoginContext } from '../../../contexts';
+import { generateRandomAccount, createUserChannel } from '../../../utils';
 import { IAccount } from '../../../interfaces';
 
 export default function CreateChannel() {
+  const context = useContext(LoginContext);
+
   const [channel, setChannel] = useState<IAccount | null>(null);
   const [confirmed, setConfirmed] = useState<boolean>(false);
 
@@ -20,7 +23,7 @@ export default function CreateChannel() {
       return;
     }
 
-    setChannelPassphrase(channel.address, channel.passphrase);
+    createUserChannel(context.user.address, channel.address, channel.passphrase);
 
     if (window.confirm("Have you safely stored the channel's passphrase?")) {
       setConfirmed(true);

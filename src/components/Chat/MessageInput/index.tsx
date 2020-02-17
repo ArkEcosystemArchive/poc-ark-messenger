@@ -2,13 +2,13 @@ import React, { useState } from 'react';
 import Modal from '../../Generic/Modal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import constants from '../../../constants';
-
 type IProps = {
   message: string;
   handleSubmit: () => void;
   setMessage: React.Dispatch<React.SetStateAction<string>>;
 };
+
+const messageLengthLimit = Number(process.env.REACT_APP_MESSAGE_LENGTH_LIMIT);
 
 export default function MessageInput({ message, handleSubmit, setMessage }: IProps) {
   const [modalIsOpen, setModalIsOpen] = useState(false);
@@ -36,9 +36,9 @@ export default function MessageInput({ message, handleSubmit, setMessage }: IPro
         setModalIsOpen={setModalIsOpen}
       />
       <small className="text-muted alt-font pointer" onClick={() => setModalIsOpen(!modalIsOpen)}>
-        <FontAwesomeIcon icon="search" /> Preview
+        <FontAwesomeIcon icon="search" /> Markdown preview
       </small>
-      <div className="input-group">
+      <div className="input-group mt-1">
         <textarea
           className="form-control"
           rows={1}
@@ -57,16 +57,16 @@ export default function MessageInput({ message, handleSubmit, setMessage }: IPro
             className="btn btn-outline-secondary btn-chat"
             type="submit"
             id="send-button"
-            disabled={message.length > constants.messageLengthLimit}
+            disabled={message.length > messageLengthLimit}
           >
             Send
           </button>
         </div>
       </div>
 
-      {message.length > constants.messageLengthLimit && (
+      {message.length > messageLengthLimit && (
         <span className="text-danger text-center d-block">
-          <small>Message is too long (max {constants.messageLengthLimit} characters)</small>
+          <small>Message is too long (max {messageLengthLimit} characters)</small>
         </span>
       )}
     </form>
