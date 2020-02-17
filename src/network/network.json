@@ -1,0 +1,18 @@
+{
+  "name": "testnet",
+  "messagePrefix": "MSN message:\n",
+  "bip32": {
+    "public": 70617039,
+    "private": 70615956
+  },
+  "pubKeyHash": 65,
+  "nethash": "3d04fb6066a4b314f31051aec17baf66c954b4450037f96d14c827423bad9af7",
+  "wif": 229,
+  "slip44": 1,
+  "aip20": 0,
+  "client": {
+    "token": "MSN",
+    "symbol": "Պ",
+    "explorer": "http://88.198.73.233:11200"
+  }
+}

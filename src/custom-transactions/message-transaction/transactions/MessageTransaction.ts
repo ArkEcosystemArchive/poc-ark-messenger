@@ -46,8 +46,7 @@ export class MessageTransaction extends Transactions.Transaction {
 
   public serialize(options?: any): ByteBuffer {
     const { data } = this;
-    // @ts-ignore
-    const messageData = data.asset.messageData as IMessageData;
+    const messageData = data.asset!.messageData as IMessageData;
 
     const messageBytes = Buffer.from(messageData.message, 'utf8');
 
@@ -56,8 +55,7 @@ export class MessageTransaction extends Transactions.Transaction {
     buffer.writeUint16(messageBytes.length);
     buffer.append(messageBytes, 'hex');
 
-    // @ts-ignore
-    const { addressBuffer, addressError } = Identities.Address.toBuffer(data.recipientId);
+    const { addressBuffer, addressError } = Identities.Address.toBuffer(data.recipientId!);
     options.addressError = addressError;
 
     buffer.append(addressBuffer);
