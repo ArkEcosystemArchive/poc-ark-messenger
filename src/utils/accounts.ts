@@ -13,11 +13,13 @@ import { generateMnemonic } from 'bip39';
 import { Transactions, Identities } from '@arkecosystem/crypto';
 import { IUser, IPostTransactionResponse, IUserInfo } from '../interfaces';
 
+const NETWORK = Number(process.env.REACT_APP_NETWORK);
+
 const delay = (duration: number): Promise<Number> =>
   new Promise(resolve => setTimeout(resolve, duration));
 
 export const getAccountDataFromPassphrase = (passphrase: string): IUser => {
-  const address = Identities.Address.fromPassphrase(passphrase);
+  const address = Identities.Address.fromPassphrase(passphrase, NETWORK);
   const publicKey = Identities.PublicKey.fromPassphrase(passphrase);
 
   return { username: null, passphrase, address, publicKey };
@@ -29,20 +31,21 @@ export const generateRandomAccount = (): IUser => {
 };
 
 export const getAddress = (passphrase: string): string =>
-  Identities.Address.fromPassphrase(passphrase);
+  Identities.Address.fromPassphrase(passphrase, NETWORK);
 
 const fundAccount = async (
   address: string,
   nonceOverride?: number
-): Promise<IPostTransactionResponse> => {
+): Promise<IPostTransactionResponse | void> => {
   const nonce = nonceOverride
     ? String(nonceOverride)
     : await fetchRemoteNonce(process.env.REACT_APP_ADDRESS!);
 
   const tx = Transactions.BuilderFactory.transfer()
+    .network(NETWORK)
     .amount('5000000000')
     .recipientId(address)
-    .vendorField('Test account pre-load')
+    // .vendorField('Account pre-load')
     .nonce(nonce)
     .sign(process.env.REACT_APP_PASSPHRASE!);
 
@@ -57,6 +60,7 @@ const registerDelegate = async (
   const nonce = nonceOverride ? String(nonceOverride) : await fetchRemoteNonce(username);
 
   const tx = Transactions.BuilderFactory.delegateRegistration()
+    .network(NETWORK)
     .usernameAsset(username)
     .nonce(nonce)
     .sign(passphrase);
@@ -84,7 +88,7 @@ export const newAccount = async (username: string): Promise<IUser> => {
 };
 
 export const validateAccount = async (passphrase: string): Promise<boolean> => {
-  const address = Identities.Address.fromPassphrase(passphrase);
+  const address = Identities.Address.fromPassphrase(passphrase, NETWORK);
   return checkAccountExists(address);
 };
 
