@@ -10,7 +10,7 @@ describe('Home', () => {
 
     cy.contains('Total Messages');
 
-    cy.get('a[href*="/login"]').should('exist');
+    cy.get('a[href="/login"]').should('exist');
 
     cy.get('a[href*="/create-account"]').should('exist');
   });

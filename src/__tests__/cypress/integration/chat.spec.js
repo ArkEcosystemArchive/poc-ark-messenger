@@ -3,7 +3,7 @@ import { createRandomString as r } from '../helpers';
 describe('Chat', () => {
   beforeEach(() => {
     const userPassphrase =
-      'clay harbor enemy utility margin pretty hub comic piece aerobic umbrella acquire';
+      'stove guilt master police weapon travel inhale convince fire sign ritual observe';
     const channelPassphrase =
       'limb tobacco green tower time source piano icon run barely pigeon curve';
 
