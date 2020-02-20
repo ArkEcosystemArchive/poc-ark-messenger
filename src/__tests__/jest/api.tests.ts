@@ -35,14 +35,14 @@ describe('api', () => {
     expect(await checkAccountExists('genesis_1')).toBe(true);
   });
 
-  test('it should return false if the account exists', async () => {
+  test('it should return false if the account does not exist', async () => {
     expect(await checkAccountExists('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')).toBe(
       false
     );
   });
 
   test('it should return message transactions for entered channel', async () => {
-    const transactions = await getTransactions('AJAkJNx1Xpb9cPVWb3hdkXqwvyeBYcoUW7');
+    const transactions = await getTransactions('THWdp6jgPBK5K7ZiCj1b5cVrBLC9ufPLmM');
     expect(transactions.length).toBeGreaterThanOrEqual(1);
     transactions.forEach(transaction => {
       expect(Object.keys(transaction).sort()).toEqual(
@@ -52,12 +52,12 @@ describe('api', () => {
   });
 
   test('it should return the last message transaction for entered channel', async () => {
-    const transaction = await getLastMessage('AJAkJNx1Xpb9cPVWb3hdkXqwvyeBYcoUW7');
+    const transaction = await getLastMessage('THWdp6jgPBK5K7ZiCj1b5cVrBLC9ufPLmM');
     expect(Object.keys(transaction).sort()).toEqual(expect.arrayContaining(transactionProperties));
   });
 
   test('it should return the username for entered address', async () => {
-    expect(await fetchUsername('ANBkoGqWeTSiaEVgVzSKZd3jS7UWzv9PSo')).toBe('genesis_1');
+    expect(await fetchUsername('TCmQEUaq3XdnXGoPHh5eXtpqJsFvwEa7gw')).toBe('genesis_1');
   });
 
   test('it should return null because the account does not exist', async () => {
@@ -70,7 +70,7 @@ describe('api', () => {
   });
 
   test('it should return an amount of total messages of a user', async () => {
-    const total = await fetchTotalUserMessages('APRqasPfwNJBBdg9qBbjqKhsXkeBEbKNRb');
+    const total = await fetchTotalUserMessages('TJSCUCpHftJhLeaTpSK3pVNdykf9Ee5gww');
     expect(typeof total).toBe('number');
   });
 
@@ -80,17 +80,17 @@ describe('api', () => {
   });
 
   test('it should return the nonce of the entered username', async () => {
-    const nonce = await fetchRemoteNonce('APnhwwyTbMiykJwYbGhYjNgtHiVJDSEhSn');
-    expect(nonce).toBe('52');
+    const nonce = await fetchRemoteNonce('genesis_1');
+    expect(nonce).toBe('3');
   });
 
   test('it should return the balance of the entered address', async () => {
-    const amount = await fetchBalance('APnhwwyTbMiykJwYbGhYjNgtHiVJDSEhSn');
-    expect(amount).toMatchObject(new BigNumber('-12500000000000000'));
+    const amount = await fetchBalance('TKj5yTdwsQ7vFap8AsdUBsEpkdyEhQWArM');
+    expect(amount).toMatchObject(new BigNumber('1399889870000000'));
   });
 
   test('it should return the registration date of the entered address as a timestamp', async () => {
-    const data = await fetchRegistrationDate('ANBkoGqWeTSiaEVgVzSKZd3jS7UWzv9PSo');
-    expect(data).toStrictEqual({ registeredOn: '2017-03-21T13:00:00.000Z', username: 'genesis_1' });
+    const data = await fetchRegistrationDate('TCmQEUaq3XdnXGoPHh5eXtpqJsFvwEa7gw');
+    expect(data).toStrictEqual({ registeredOn: '2020-02-17T08:38:15.953Z', username: 'genesis_1' });
   });
 });

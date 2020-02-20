@@ -1,7 +1,7 @@
 describe('Channels', () => {
   beforeEach(() => {
     const userPassphrase =
-      'clay harbor enemy utility margin pretty hub comic piece aerobic umbrella acquire';
+      'stove guilt master police weapon travel inhale convince fire sign ritual observe';
 
     cy.visit('/login');
 
@@ -50,7 +50,7 @@ describe('Channels', () => {
 
       cy.get('#join-button').click();
 
-      cy.url().should('eq', Cypress.config('baseUrl') + '/chat/AJAkJNx1Xpb9cPVWb3hdkXqwvyeBYcoUW7');
+      cy.url().should('eq', Cypress.config('baseUrl') + '/chat/TCN5ewU7MQ3wxbM9cfh27oGzNAToKBz8gH');
     });
   });
 });

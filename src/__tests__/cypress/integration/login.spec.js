@@ -4,7 +4,7 @@ describe('Login', () => {
   });
 
   it("should navigate back to the 'Home' page", () => {
-    cy.get('a[href*="/"]').click();
+    cy.get('a[href="/"]').click();
 
     cy.get('h1').contains('ARK Messenger');
 
@@ -19,8 +19,8 @@ describe('Login', () => {
       .should('have.value', pw);
   });
 
-  it('should login the user as genesis_1', () => {
-    const pw = 'clay harbor enemy utility margin pretty hub comic piece aerobic umbrella acquire';
+  it('should login the user as tester', () => {
+    const pw = 'stove guilt master police weapon travel inhale convince fire sign ritual observe';
 
     cy.get('#sidebar-wrapper').contains('Not logged in');
 
@@ -32,7 +32,7 @@ describe('Login', () => {
 
     cy.get('#sidebar-wrapper')
       .should('not.contain.text', 'Not logged in')
-      .contains('genesis_1');
+      .contains('tester');
 
     cy.url().should('eq', Cypress.config('baseUrl') + '/channels');
   });

@@ -6,7 +6,7 @@ describe('Create Account', () => {
   });
 
   it("should navigate back to the 'Home' page", () => {
-    cy.get('a[href*="/"]').click();
+    cy.get('a[href="/"]').click();
 
     cy.get('h1').contains('ARK Messenger');
 

@@ -4,7 +4,7 @@ describe('Sidebar', () => {
   });
 
   it('should show the expected elements when logged in', () => {
-    const pw = 'clay harbor enemy utility margin pretty hub comic piece aerobic umbrella acquire';
+    const pw = 'stove guilt master police weapon travel inhale convince fire sign ritual observe';
 
     cy.wait(1000);
 
@@ -50,7 +50,7 @@ describe('Sidebar', () => {
   });
 
   it('should show and hide the navbar by logging in and out', () => {
-    const pw = 'clay harbor enemy utility margin pretty hub comic piece aerobic umbrella acquire';
+    const pw = 'stove guilt master police weapon travel inhale convince fire sign ritual observe';
 
     cy.wait(1000);
 
