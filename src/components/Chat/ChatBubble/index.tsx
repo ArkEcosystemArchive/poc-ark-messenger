@@ -15,16 +15,15 @@ export default function ChatBubble({ data }: IProps) {
   const [username, setUsername] = useState<string | undefined>(sender);
 
   const Message = () => {
-    try {
-      return compiler(message, {
-        // Ignoring due to typings being outdated / not including this attribute
-        // @ts-ignore
-        disableParsingRawHTML: true,
-        overrides: { img: { props: { className: 'chat-image' } } }
-      });
-    } catch {
-      return compiler('Something went wrong');
+    if (message.match(/.*http:\/\/.*/)) {
+      return compiler(`_Non-secure content removed. Please use secure sources only (https://)_ 🤖`);
     }
+
+    return compiler(message, {
+      // Ignoring due to typings being outdated / not including this attribute
+      // @ts-ignore
+      disableParsingRawHTML: true
+    });
   };
 
   useEffect(() => {
