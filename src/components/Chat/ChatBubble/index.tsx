@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import Markdown from 'markdown-to-jsx';
+import { compiler } from 'markdown-to-jsx';
 
 import { retrieveUsername } from '../../../utils';
 
@@ -13,6 +13,18 @@ export default function ChatBubble({ data }: IProps) {
   const { sender, message, timestamp } = data;
 
   const [username, setUsername] = useState<string | undefined>(sender);
+
+  const Message = () => {
+    try {
+      return compiler(message, {
+        // Ignoring due to typings being outdated / not including this attribute
+        // @ts-ignore
+        disableParsingRawHTML: true
+      });
+    } catch {
+      return compiler('Something went wrong');
+    }
+  };
 
   useEffect(() => {
     if (sender !== 'You') {
@@ -35,13 +47,7 @@ export default function ChatBubble({ data }: IProps) {
         <hr className="my-1" />
 
         <div className="chat-message">
-          <Markdown
-            // Ignoring due to typings being outdated / not including this attribute
-            // @ts-ignore
-            options={{ disableParsingRawHTML: true }}
-          >
-            {message}
-          </Markdown>
+          <Message />
         </div>
       </div>
     </div>
