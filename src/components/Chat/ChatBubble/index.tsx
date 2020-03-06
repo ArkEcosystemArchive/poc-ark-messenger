@@ -22,7 +22,8 @@ export default function ChatBubble({ data }: IProps) {
     return compiler(message, {
       // Ignoring due to typings being outdated / not including this attribute
       // @ts-ignore
-      disableParsingRawHTML: true
+      disableParsingRawHTML: true,
+      overrides: { img: { props: { className: 'chat-image' } } }
     });
   };
 
