@@ -39,7 +39,26 @@ export default function App() {
           </div>
 
           <div className="text-right text-light mt-3 pr-3 font-mono">
-            <small>client v{process.env.REACT_APP_VERSION}</small>
+            <small>
+              client v{process.env.REACT_APP_VERSION} |{' '}
+              <a
+                href="https://explorer.arkmessenger.io"
+                className="link-light"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Explorer
+              </a>{' '}
+              |{' '}
+              <a
+                href="https://api.arkmessenger.io"
+                className="link-light"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                API
+              </a>
+            </small>
           </div>
         </div>
       </div>

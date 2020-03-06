@@ -1,4 +1,6 @@
-# ARK Messenger 💬
+# ARK Messenger
+
+![Test Image 1](banner.png)
 
 A fully anonymous and secure chat service proof of concept that utilizes many of the benefits that the ARK blockchain has to offer.
 

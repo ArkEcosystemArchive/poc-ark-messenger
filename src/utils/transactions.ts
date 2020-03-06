@@ -6,6 +6,8 @@ import { MessageTransactionBuilder } from '../custom-transactions/message-transa
 
 Transactions.TransactionRegistry.registerTransactionType(MessageTransaction);
 
+const NETWORK = Number(process.env.REACT_APP_NETWORK);
+
 const createMessageTransaction = async (
   recipientId: string,
   encryptedMessage: string,
@@ -15,6 +17,7 @@ const createMessageTransaction = async (
   const nonce = await fetchRemoteNonce(senderId);
 
   const tx = new MessageTransactionBuilder()
+    .network(NETWORK)
     .recipientId(recipientId)
     .messageData(encryptedMessage)
     .nonce(nonce)
@@ -29,15 +32,19 @@ export const sendMessage = async (
   channelPassphrase: string,
   userPassphrase: string,
   userAddress: string
-): Promise<IPostTransactionResponse> => {
+): Promise<IPostTransactionResponse | void> => {
   const encryptedMessage = encryptMessage(text, channelPassphrase);
 
-  const tx = await createMessageTransaction(
-    recipientId,
-    encryptedMessage,
-    userPassphrase,
-    userAddress
-  );
+  try {
+    const tx = await createMessageTransaction(
+      recipientId,
+      encryptedMessage,
+      userPassphrase,
+      userAddress
+    );
 
-  return broadcastTransaction(tx);
+    return broadcastTransaction(tx);
+  } catch (err) {
+    console.error(err);
+  }
 };

@@ -1,6 +1,6 @@
 {
   "name": "ark-messenger-client",
-  "version": "0.9.0",
+  "version": "0.10.0",
   "description": "A decentralized chat application built on ARK.",
   "license": "MIT",
   "contributors": [
@@ -19,8 +19,8 @@
     "eject": "react-scripts eject"
   },
   "dependencies": {
-    "@arkecosystem/core-transactions": "^2.6.0-next.9",
-    "@arkecosystem/crypto": "^2.6.0-next.5",
+    "@arkecosystem/core-transactions": "^2.6.1",
+    "@arkecosystem/crypto": "^2.6.1",
     "@fortawesome/fontawesome-svg-core": "^1.2.25",
     "@fortawesome/free-regular-svg-icons": "^5.12.0",
     "@fortawesome/free-solid-svg-icons": "^5.11.2",
