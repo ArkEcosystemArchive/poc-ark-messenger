@@ -37,4 +37,16 @@
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
   </body>
+
+  <script>
+    const isSafari = !!navigator.userAgent.match(/Version\/[\d\.]+.*Safari/);
+    const iOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+
+    if (isSafari || iOS) {
+      window.stop();
+      alert('iOS / Safari currently not supported.');
+      window.open('', '_self', '');
+      window.close();
+    }
+  </script>
 </html>

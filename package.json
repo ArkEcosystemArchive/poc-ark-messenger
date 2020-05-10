@@ -1,6 +1,6 @@
 {
   "name": "ark-messenger-client",
-  "version": "0.10.0",
+  "version": "0.10.2",
   "description": "A decentralized chat application built on ARK.",
   "license": "MIT",
   "contributors": [
@@ -39,7 +39,7 @@
     "react-dom": "^16.12.0",
     "react-modal": "^3.11.1",
     "react-router-dom": "^5.1.2",
-    "react-scripts": "3.3.0",
+    "react-scripts": "3.4.0",
     "react-spinners": "^0.6.1",
     "typescript": "~3.7.2"
   },
